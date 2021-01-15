@@ -4,14 +4,14 @@ from sqlalchemy.orm import sessionmaker, relationship
 import pymysql
 
 pymysql.install_as_MySQLdb()
-engine = create_engine("mysql://fil:fil@localhost/pars", encoding="utf8")
+engine = create_engine("mysql://huston:fil@localhost/pars", encoding="utf8")
 
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
 
 class Einstein(Base):
-    __tablename__ = 'Einstein'
+    __tablename__ = 'Эйнштейн Party'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(1000, collation='utf8mb4_unicode_ci'), index=True)
@@ -25,7 +25,7 @@ class Einstein(Base):
 
 
 class KvizPlease(Base):
-    __tablename__ = 'Kviz_please'
+    __tablename__ = 'Квиз плиз'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(100, collation='utf8mb4_unicode_ci'), index=True)
@@ -39,7 +39,7 @@ class KvizPlease(Base):
 
 
 class Kvizium(Base):
-    __tablename__ = 'Kvizium'
+    __tablename__ = 'Квизиум'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(1000, collation='utf8mb4_unicode_ci'), index=True)
@@ -53,7 +53,7 @@ class Kvizium(Base):
 
 
 class Mozgoboy(Base):
-    __tablename__ = 'Mozgoboy'
+    __tablename__ = 'BrainBoy'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(1000, collation='utf8mb4_unicode_ci'), index=True)
@@ -67,7 +67,7 @@ class Mozgoboy(Base):
 
 
 class Mozgva(Base):
-    __tablename__ = 'Mozgva'
+    __tablename__ = 'Мозгва'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(100, collation='utf8mb4_unicode_ci'), index=True)
@@ -96,3 +96,4 @@ class Squiz(Base):
 
 Base.metadata.create_all(engine)
 session = Session()
+

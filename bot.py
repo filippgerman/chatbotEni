@@ -13,6 +13,8 @@ from aiogram.utils.helper import Helper, HelperMode, ListItem
 from aiogram.utils.markdown import text, bold
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram import types
+from memoryClass import Connector
+from format import number_games_str
 
 logging.basicConfig(level=logging.INFO)  # начало логирования.
 
@@ -51,6 +53,7 @@ async def distribution(message: types.Message):
     if message.text == 'Рейтинг команды':
         await States.team_rating.set()  # переключение на состояние 'рейтинг команды'
         await bot.send_message(message.from_user.id, 'Введите название команды: ')
+
     elif message.text == 'Рейтинг склеенный':
         await States.multiple_rating.set()  # переключение на состояние 'множественный рейтинг'
         await bot.send_message(message.from_user.id, 'Если в разных квизах вы играете под разными названиями,'
@@ -63,9 +66,10 @@ async def distribution(message: types.Message):
                                'Если вы хотите сравнить две команды, введите их названия через "/"\n'
                                'Пример: команда 1/команда 2\n'
                                'Введите название команд: ')
+
     else:
         await bot.send_message(message.from_user.id,
-                               'Такого режима нет, пожалуйста выбирите из существующих режимов: ')
+                               'Такого режима нет, пожалуйста выбирите из кнопок: ')
 
 
 @dp.message_handler(state=States.team_rating, content_types=types.ContentTypes.TEXT)
@@ -74,7 +78,37 @@ async def rating(message: types.Message):
     Пользователь вводит название команды
     отправляет сообщением ретинг команды
     """
-    await bot.send_message(message.from_user.id, 'Сообщение с рейтингом')
+    # names_team = message.text.split('+')
+    # for name in names_team:
+
+    response = Connector(message.text)
+
+    sum_games = 0  # сумма игр по всем квизам
+    sum_points = 0  # сумма очков по всме квизам
+    count_kviz = 0  # кол-во квизов
+
+    for el in response.get():
+        if el.points > 0:  # проверка не пустышка ли это
+            count_kviz += 1
+            sum_games += el.games
+            sum_points += el.points
+
+    # основа для ответа пользователю
+    answer = f"Команда: {message.text}\n" \
+             f"Всего игр: {sum_games} ({number_games_str(count_kviz)})\n" \
+             f"Всего баллов {sum_points} ({number_games_str(count_kviz)})\n" \
+             f"Подробно:" + ("\n" * 2)
+
+    for row in response.get():
+        if row.points > 0:  # проверка не пустышка ли
+            answer += f"{row.name_kviz}\n" \
+                      f"Всего: {row.points} бал.\n" \
+                      f"Всего игр: {row.games}\n" \
+                      f"Среднее: {round((row.points / row.games), 2)}" + ("\n" * 2)
+        else:  # если квиз пустышка то добавляем упрощ. строку
+            answer += f"{row.name_kviz}: 0 бал.\n"
+
+    await bot.send_message(message.from_user.id, answer)  # отправка ответа пользователю
 
     await States.mode_selection.set()  # возвращения статуса для выбора режима
     await mode_buttons(message)  # вызов функции показывающую кнопки с режимом
@@ -86,6 +120,7 @@ async def multiple_rating(message: types.Message):
     Пользователь вводит название команд
     функция отправляет суммарный ретинг этих команд
     """
+
     await bot.send_message(message.from_user.id, 'Сообщение с склееным рейтингом')
 
     await States.mode_selection.set()  # возвращения статуса для выбора режима

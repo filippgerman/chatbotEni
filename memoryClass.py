@@ -1,4 +1,5 @@
 from databases import *
+from format import remove_spaces
 
 
 class Connector:
@@ -15,19 +16,21 @@ class Connector:
         :return: список объектов, класса Data,со всей инф. по команде
         """
         answer_data = []  # ответ отсортированный список объектов Data
-        pacifiers = []  # список пустых квизов, для сортировки, и дальнейшем слиянием с answer_data
-        for database in self.name_db:
-            if session.query(database).filter_by(name=self.text).count():  # проверка, есть ли такая команда в БД.
-                for i in session.query(database).filter_by(name=self.text):  # находим такую запись в БД.
-                    # создаем объект класса Data и добавляем ее в список
-                    answer_data.append(Data(i.number_game, i.points, i.__tablename__))
-            else:  # если записи нет, значит создавем пустышку класса Data
-                pacifiers.append(Data(0, 0, database.__tablename__))
+        names_team = self.text.split('+')  # название команд
+        for db in self.name_db:  # проверяем по всем БД
+            obj = Data(0, 0, db.__tablename__)  # создаем пустой объект
 
-        answer_data = sorted(answer_data, key=lambda data: data.games,
-                             reverse=True)  # сортируем список по убыванию (кол-во игр)
-        pacifiers = sorted(pacifiers, key=lambda data: data.name_kviz)  # сортируем список по алфавиту
-        answer_data.extend(pacifiers)  # слияние двух списков
+            for name in names_team:  # движемся по названием команд
+                name = remove_spaces(name)  # (исп. метод format_name, убирает пробелы в имени)
+
+                if session.query(db).filter_by(name=name).count():  # проверяем есть ли такая команда в БД
+                    for i in session.query(db).filter_by(name=name):
+                        obj.games += i.number_game  # складываем знаяения команд, из одной БД
+                        obj.points += i.points
+
+            answer_data.append(obj)  # добавляем объект в список
+            # сортируем список по кол-ву игр, и по алфавиту
+            answer_data = sorted(answer_data, key=lambda data: (-data.games, data.name_kviz))
 
         return answer_data
 
@@ -38,6 +41,9 @@ class Data:
     """
 
     def __init__(self, games, points, name_kviz):
-        self.games = games
-        self.points = points
-        self.name_kviz = name_kviz
+        self.games = games  # кол-во игр
+        self.points = points  # кол-во очков
+        self.name_kviz = name_kviz  # название БД
+
+    def __repr__(self):
+        return f"{self.games=} {self.points=} {self.name_kviz=}"

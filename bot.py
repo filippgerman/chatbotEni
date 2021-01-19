@@ -5,11 +5,7 @@ import sqlalchemy
 from aiogram.types import ContentType
 
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.dispatcher.storage import BaseStorage
-from aiogram.types import ParseMode, InputMediaPhoto, ChatActions
-from aiogram.utils.helper import Helper, HelperMode, ListItem
 from aiogram.utils.markdown import text, bold
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram import types
@@ -118,7 +114,7 @@ async def comparison_teams(message: types.Message):
     функция отправляет сравнение этих команд
     """
 
-    # основа для ответа пользователю
+    # основа для ответа пользователю:
     all_games = f"Всего игр: "
     all_points = f"Всего баллов "
     info_on_games = []
@@ -157,7 +153,10 @@ async def comparison_teams(message: types.Message):
                 if kviz.name_kviz == row.name_kviz:
                     kviz.add_points(row.points)  # доб кол-во очков
                     kviz.add_games(row.games)  # доб кол-во игр
-                    kviz.average_str()  # преобразовываем среднее значение
+                    if row.games == 0:  # проверка не пустышка ли это (на ноль делить нальзя)
+                        kviz.add_average(0)  # если игр не было, сразу присваиваем 0
+                    else:  # если игры были то производим вычисления
+                        kviz.add_average(round(row.points / row.games, 2))  # преобразовываем среднее значение
 
     # сортируем список по кол-ву игр, а потом уже по алфавиту
     info_on_games = sorted(info_on_games, key=lambda data: (-data.games, data.name_kviz))

@@ -1,4 +1,8 @@
 class Statistics:
+    """
+    Класс необходим для содержания информации, перед отправкой пользователю.
+    """
+
     def __init__(self, name_kviz):
         self.name_kviz = name_kviz
         self.points_str = ''
@@ -8,21 +12,24 @@ class Statistics:
         self.average = ''
 
     def __repr__(self):
-        return self.name_kviz
+        return f"{self.name_kviz} кол-во очков: {self.points} кол-во игр: {self.games}  среднее: {self.average}"
 
     def add_points(self, points):
+        """
+        :param points: int кол-во очков команды
+        """
         self.points_str += str(f" / {points}")
         self.points += points
 
     def add_games(self, games):
+        """
+        :param games: int кол-во игр команды
+        """
         self.games_str += str(f" / {games}")
         self.games += games
 
-    def average_str(self):
-        self.average += str(f" / {self.get_average()}")
-
-    def get_average(self):
-        if self.points > 0:
-            return round((self.points / self.games), 2)
-        else:
-            return 0
+    def add_average(self, average):
+        """
+        :param average: среднее кол-во балов
+        """
+        self.average += str(f" / {average}")

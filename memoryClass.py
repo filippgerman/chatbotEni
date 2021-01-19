@@ -47,3 +47,4 @@ class Data:
 
     def __repr__(self):
         return f"{self.games=} {self.points=} {self.name_kviz=}"
+

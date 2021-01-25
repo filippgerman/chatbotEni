@@ -11,7 +11,7 @@ Session = sessionmaker(bind=engine)
 
 
 class Einstein(Base):
-    __tablename__ = 'Эйнштейн Party'
+    __tablename__ = 'Einstein'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(1000, collation='utf8mb4_unicode_ci'), index=True)
@@ -25,7 +25,7 @@ class Einstein(Base):
 
 
 class KvizPlease(Base):
-    __tablename__ = 'Квиз плиз'
+    __tablename__ = 'KvizPlease'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(100, collation='utf8mb4_unicode_ci'), index=True)
@@ -39,7 +39,7 @@ class KvizPlease(Base):
 
 
 class Kvizium(Base):
-    __tablename__ = 'Квизиум'
+    __tablename__ = 'Kvizium'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(1000, collation='utf8mb4_unicode_ci'), index=True)
@@ -52,7 +52,7 @@ class Kvizium(Base):
         self.points = points
 
 
-class Mozgoboy(Base):
+class BrainBoy(Base):
     __tablename__ = 'BrainBoy'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
@@ -67,7 +67,7 @@ class Mozgoboy(Base):
 
 
 class Mozgva(Base):
-    __tablename__ = 'Мозгва'
+    __tablename__ = 'Mozgva'
 
     id = Column(BIGINT, primary_key=True, autoincrement=True)
     name = Column(String(100, collation='utf8mb4_unicode_ci'), index=True)

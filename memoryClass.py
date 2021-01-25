@@ -6,7 +6,9 @@ class Connector:
     """
     Основной класс взаиможействи с БД, получения информации по команде
     """
-    name_db = [Einstein, KvizPlease, Kvizium, Mozgoboy, Mozgva, Squiz]  # список всех таблиц в БД.
+    name_db = [Einstein, KvizPlease, Kvizium, BrainBoy, Mozgva, Squiz]  # список всех таблиц в БД.
+    name_kviz = {'Einstein': 'Эйнштейн Party', 'KvizPlease': 'Квиз, плиз', 'Kvizium': 'Квизиум',
+                 'BrainBoy': 'Brainboy', 'Mozgva': 'Мозгва', 'Squiz': 'Squiz'}
 
     def __init__(self, text):
         self.text = text  # название команды которое передает ползователь
@@ -18,7 +20,7 @@ class Connector:
         answer_data = []  # ответ отсортированный список объектов Data
         names_team = self.text.split('+')  # название команд
         for db in self.name_db:  # проверяем по всем БД
-            obj = Data(0, 0, db.__tablename__)  # создаем пустой объект
+            obj = Data(0, 0, self.name_kviz.get(db.__tablename__))  # создаем пустой объект
 
             for name in names_team:  # движемся по названием команд
                 name = remove_spaces(name)  # (исп. метод format_name, убирает пробелы в имени)
@@ -47,4 +49,3 @@ class Data:
 
     def __repr__(self):
         return f"{self.games=} {self.points=} {self.name_kviz=}"
-

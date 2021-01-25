@@ -125,7 +125,7 @@ async def comparison_teams(message: types.Message):
         информации по всем квизам от каждой команды.
         Объекты в себе хранят склеенную инфу по пользователям
         """
-        info_on_games.append(Statistics(db.__tablename__))
+        info_on_games.append(Statistics(Connector.name_kviz.get(db.__tablename__)))
 
     for name in message.text.split('/'):
         name = remove_spaces(name)  # форматируем имя, убираем пробелы
@@ -173,7 +173,7 @@ async def comparison_teams(message: types.Message):
                       f"Всего игр: {formatting(kviz.games_str)}\n" \
                       f"Среднее: {formatting(kviz.average)}" + ("\n" * 2)
         else:
-            answer += f"{kviz.name_kviz}: 0 бал.\n"
+            answer += f"{Connector.name_kviz.get(kviz.name_kviz)}: 0 бал.\n"
 
     await bot.send_message(message.from_user.id, answer)  # ответ пользователю
     await States.mode_selection.set()  # возвращения статуса для выбора режима

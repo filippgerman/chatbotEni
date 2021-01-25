@@ -1,7 +1,6 @@
 from databases import *
 from format import remove_spaces
 
-
 class Connector:
     """
     Основной класс взаиможействи с БД, получения информации по команде

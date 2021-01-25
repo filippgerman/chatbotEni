@@ -1,9 +1,5 @@
 import logging
 
-import sqlalchemy
-
-from aiogram.types import ContentType
-
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.utils.markdown import text, bold
@@ -173,7 +169,7 @@ async def comparison_teams(message: types.Message):
                       f"Всего игр: {formatting(kviz.games_str)}\n" \
                       f"Среднее: {formatting(kviz.average)}" + ("\n" * 2)
         else:
-            answer += f"{Connector.name_kviz.get(kviz.name_kviz)}: 0 бал.\n"
+            answer += f"{kviz.name_kviz}: 0 бал.\n"
 
     await bot.send_message(message.from_user.id, answer)  # ответ пользователю
     await States.mode_selection.set()  # возвращения статуса для выбора режима

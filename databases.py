@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 import pymysql
 
 pymysql.install_as_MySQLdb()
-engine = create_engine("mysql://huston:fil@localhost/pars", encoding="utf8")
+engine = create_engine("mysql://fil:fil@db/doc", encoding="utf8")
 
 Base = declarative_base()
 Session = sessionmaker(bind=engine)

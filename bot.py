@@ -32,7 +32,12 @@ async def start_work(message: types.Message):
     """
     Стратовое сообщение при включении бота (приветствие)
     """
-    await bot.send_message(message.from_user.id, 'Приветствие')
+    text = "Привет, позвольте я расскажу Вам, как я работаю\n" \
+           "Вам будет предоставлен выбор и трех кнопок\n" \
+           "каждая кнопка означает определенный режим\n" \
+           "Вы выбираете то что Вам подходит\n" \
+           "и я показываю статистику по Вашей команде\n"
+    await bot.send_message(message.from_user.id, text)
     await States.mode_selection.set()  # переключение в состояние (Выбор режима)
     await mode_buttons(message)  # вызов функции показывающую кнопки с режимом
 
@@ -179,6 +184,9 @@ async def comparison_teams(message: types.Message):
 # кнопки
 @dp.message_handler(state='mode_selection')
 async def mode_buttons(message: types.Message):
+    """
+    Вывод кнопок, режимов, для пользователя.
+    """
     keyboard_1 = types.KeyboardButton("Рейтинг команды")
     keyboard_2 = types.KeyboardButton("Рейтинг склеенный")
     keyboard_3 = types.KeyboardButton("Сравнение команд")
@@ -188,6 +196,17 @@ async def mode_buttons(message: types.Message):
 
     await message.answer(text(f"Выберите одну из кнопок"),
                          reply_markup=button)
+
+
+@dp.message_handler(state='*', content_types=types.ContentTypes.ANY)
+async def garbage(message: types.Message):
+    """
+    Если пользователь вводит всякий мусор, то ему отправляется сообщение, и переход на выбор кнопок
+    """
+    await bot.send_message(message.from_user.id,
+                           f"К сожалению я Вас не понимаю, попробуйте выбрать режим и следуйте указаниям")
+    await States.mode_selection.set()
+    await mode_buttons(message)
 
 
 if __name__ == "__main__":

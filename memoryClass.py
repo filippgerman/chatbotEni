@@ -1,9 +1,10 @@
 from databases import *
 from format import remove_spaces
 
+
 class Connector:
     """
-    Основной класс взаиможействи с БД, получения информации по команде
+    Основной класс взаимодействия с БД, получения информации по команде
     """
     name_db = [Einstein, KvizPlease, Kvizium, BrainBoy, Mozgva, Squiz]  # список всех таблиц в БД.
     name_kviz = {'Einstein': 'Эйнштейн Party', 'KvizPlease': 'Квиз, плиз', 'Kvizium': 'Квизиум',
